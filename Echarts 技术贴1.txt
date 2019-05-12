@@ -1,0 +1,69 @@
+ECharts，缩写来自 Enterprise Charts，商业级数据图表，是百度的一个开源的数据可视化工具，一个纯 Javascript 的图表库，能够在 PC 端和移动设备上流畅运行，兼容当前绝大部分浏览器（IE6/7/8/9/10/11，chrome，firefox，Safari等），底层依赖轻量级的 Canvas 库 ZRender，ECharts 提供直观，生动，可交互，可高度个性化定制的数据可视化图表。创新的拖拽重计算、数据视图、值域漫游等特性大大增强了用户体验，赋予了用户对数据进行挖掘、整合的能力。
+
+ECharts 有哪些特点：
+ECharts 属于开源软件，并且提供了非常炫酷的图形界面，特色是地图，另外还提供了柱状图、折线图、饼图、气泡图及四象限图等； 
+ECharts 使用简单，只要会引用就会得到完美的展示效果； 
+ECharts 种类多，ECharts 实现简单，各类图形都有；相应的模板，还有丰富的 API 及文档说明，非常详细； 
+ECharts 兼容性好，基于HTML5，有着良好的动画渲染效果。 
+
+获取 ECharts：
+可以通过以下几种方式获取 ECharts。
+从官网下载界面选择你需要的版本下载，根据开发者功能和体积上的需求，提供了不同打包的下载。
+在 ECharts 的 GitHub 上下载最新的 release 版本，解压出来的文件夹里的 dist 目录里可以找到最新版本的 echarts 库。
+通过 npm 获取 echarts，npm install echarts --save
+cdn 引入，你可以在 cdnjs，npmcdn 或者国内的 bootcdn 上找到 ECharts 的最新版本。
+
+引入 ECharts：
+引入方式简单，只需要像普通的 JavaScript 库一样用 script 标签引入。
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- 引入 ECharts 文件 -->
+    <script src="echarts.min.js"></script>
+</head>
+</html>
+
+绘制一个简单的图表：
+在绘图前我们需要为 ECharts 准备一个具备高宽的 DOM 容器。然后就可以通过 echarts.init 方法初始化一个 echarts 实例并通过 setOption 方法生成一个简单的柱状图，下面是完整代码。
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="echarts.min.js"></script>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</body>
+</html>
+这样你的第一个图表就诞生了！
