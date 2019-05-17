@@ -1,0 +1,108 @@
+Servlet 3.0 使用
+
+Servlet 3.0可用于简化 Web 应用的开发和部署。其中有几项特性： 异步处理支持, 基于注解支持, 可插性支持. 这里简单说说servlet3.0的简单使用。该版本新增了若干注解，用于简化 Servlet、过滤器（Filter）和监听器（Listener）的声明，这使得 web.xml 部署描述文件从该版本开始不再是必选的了。
+
+要求：
+	Tomcat7.0版本及以上
+	STS：Version: 4.2.1.RELEASE
+
+Servlet类：
+		只需要在Servlet类上面添加@WebServlet(urlPatterns="servlet路径") 即可
+
+		@WebServlet(urlPatterns="/AServlet", 
+		initParams={
+			@WebInitParam(name="p1", value="v1"),
+			@WebInitParam(name="p2", value="v2")
+		},
+		loadOnStartup=1
+		)
+		public class AServlet extends HttpServlet {
+			protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+				//业务处理代码
+			  }
+			}
+			protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+				doGet(request, response);
+			}
+
+		}
+		
+Filter：
+		Filter使用@WebFilter注解，其中也有一个urlParrents属性用来表示需要过滤的资源，这个urlParrents也可以省略
+
+		@WebFilter(urlPatterns="/*")
+		public class AFilter implements Filter {
+
+			@Override
+			public void destroy() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void doFilter(ServletRequest request, ServletResponse repsonse,
+					FilterChain chain) throws IOException, ServletException {
+			   //业务代码..
+			}
+
+			@Override
+			public void init(FilterConfig arg0) throws ServletException {
+				   
+			}
+
+		}
+		
+@WebListener
+		public class AListener implements ServletContextListener {
+
+			public void contextDestroyed(ServletContextEvent arg0)  { 
+				 // TODO Auto-generated method stub
+			}
+
+			public void contextInitialized(ServletContextEvent arg0)  { 
+				 // TODO Auto-generated method stub
+			}
+			
+		}
+
+		
+		
+上传的支持:
+		上传对表单的要求（所有的上传对前端页面都是这些要求）：
+		　　　　method="post"
+		　　　　enctype="multipart/form-data"，它的默认值是：application/x-www-form-urlencoded
+		　　　　<input type="file" name="必须给"/>
+		我们只需要在Servlet上添加@MultipartConfig注解即可
+
+		当然也可以为@MultipartConfig注解指定属性值，它有四个属性：
+			int filesizeThreshold：指定缓存的大小，当超出这个大小后，文件会保存到磁盘上；
+			String location：指定临时文件的目录；
+			long maxFilesize：指定上传单个文件的大小限制，如果上传的谁的超出了这个大小，那么就会抛出异常；
+			long maxRequestSize：指定整个表单的大小限制。
+		当在Servlet上使用了@MultipartConfig注解后，那么就可以使用request.getPart(“fieldName”)来获取<input:file>的内容，其中Part表示一个文件表单项，接着就可以使用Part对象的API		
+
+		@WebServlet("/CServlet")
+		@MultipartConfig
+		public class CServlet extends HttpServlet {
+			private static final long serialVersionUID = 1L;
+
+			protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			  request.setCharacterEncoding("utf-8");
+				//Servlet3.0对文件上传的支持
+				String userName = request.getParameter("userName");
+				
+				Part part = request.getPart("file");
+				//获得文件的MIME类型
+				System.out.println(part.getContentType());
+				//获得文件的字节数
+				System.out.println(part.getSize());
+				//获得文件字段名
+				System.out.println(part.getName());
+				//获取文件名
+				System.out.println(part.getSubmittedFileName());
+				
+			//保存图片到硬盘
+				part.write("d:/xxx.jpg");
+			}
+
+
+		}
